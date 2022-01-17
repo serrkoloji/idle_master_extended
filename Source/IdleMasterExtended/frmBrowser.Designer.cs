@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
+using System;
+using System.ComponentModel;
 using System.Windows.Forms;
 
 namespace IdleMasterExtended
@@ -33,7 +35,6 @@ namespace IdleMasterExtended
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBrowser));
-            this.webBrowserAuthentication = new System.Windows.Forms.WebBrowser();
             this.labelSaving = new System.Windows.Forms.Label();
             this.pictureBoxSpinningGif = new System.Windows.Forms.PictureBox();
             this.timerCheck = new System.Windows.Forms.Timer(this.components);
@@ -42,25 +43,11 @@ namespace IdleMasterExtended
             this.labelWebBrowserAuth = new System.Windows.Forms.Label();
             this.buttonQuickLogin = new System.Windows.Forms.Button();
             this.labelQuickLoginInstructions = new System.Windows.Forms.Label();
+            this.WebView1 = new Microsoft.Toolkit.Forms.UI.Controls.WebView();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpinningGif)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebBrowserLock)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.WebView1)).BeginInit();
             this.SuspendLayout();
-            // 
-            // webBrowserAuthentication
-            // 
-            this.webBrowserAuthentication.AllowWebBrowserDrop = false;
-            this.webBrowserAuthentication.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.webBrowserAuthentication.Location = new System.Drawing.Point(0, 16);
-            this.webBrowserAuthentication.MinimumSize = new System.Drawing.Size(20, 20);
-            this.webBrowserAuthentication.Name = "webBrowserAuthentication";
-            this.webBrowserAuthentication.ScriptErrorsSuppressed = true;
-            this.webBrowserAuthentication.ScrollBarsEnabled = false;
-            this.webBrowserAuthentication.Size = new System.Drawing.Size(604, 432);
-            this.webBrowserAuthentication.TabIndex = 0;
-            this.webBrowserAuthentication.DocumentCompleted += new System.Windows.Forms.WebBrowserDocumentCompletedEventHandler(this.wbAuth_DocumentCompleted);
-            this.webBrowserAuthentication.Navigating += new System.Windows.Forms.WebBrowserNavigatingEventHandler(this.wbAuth_Navigating);
             // 
             // labelSaving
             // 
@@ -128,7 +115,7 @@ namespace IdleMasterExtended
             this.buttonQuickLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(130)))), ((int)(((byte)(225)))));
             this.buttonQuickLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.buttonQuickLogin.ForeColor = System.Drawing.SystemColors.Control;
-            this.buttonQuickLogin.Location = new System.Drawing.Point(424, 448);
+            this.buttonQuickLogin.Location = new System.Drawing.Point(424, 684);
             this.buttonQuickLogin.Name = "buttonQuickLogin";
             this.buttonQuickLogin.Size = new System.Drawing.Size(180, 24);
             this.buttonQuickLogin.TabIndex = 6;
@@ -142,26 +129,37 @@ namespace IdleMasterExtended
             this.labelQuickLoginInstructions.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(38)))), ((int)(((byte)(38)))), ((int)(((byte)(38)))));
             this.labelQuickLoginInstructions.Font = new System.Drawing.Font("Arial", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.labelQuickLoginInstructions.ForeColor = System.Drawing.SystemColors.Control;
-            this.labelQuickLoginInstructions.Location = new System.Drawing.Point(0, 448);
+            this.labelQuickLoginInstructions.Location = new System.Drawing.Point(0, 684);
             this.labelQuickLoginInstructions.Name = "labelQuickLoginInstructions";
             this.labelQuickLoginInstructions.Size = new System.Drawing.Size(604, 24);
             this.labelQuickLoginInstructions.TabIndex = 7;
             this.labelQuickLoginInstructions.Text = "To automatically log in using your Steam client credentials, press this button:";
             this.labelQuickLoginInstructions.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // WebView1
+            // 
+            this.WebView1.Location = new System.Drawing.Point(0, 0);
+            this.WebView1.MinimumSize = new System.Drawing.Size(20, 20);
+            this.WebView1.Name = "WebView1";
+            this.WebView1.Size = new System.Drawing.Size(604, 681);
+            this.WebView1.Source = new System.Uri("https://steamcommunity.com/login/home/?goto=", System.UriKind.Absolute);
+            this.WebView1.TabIndex = 8;
+            this.WebView1.NavigationCompleted += new System.EventHandler<WebViewControlNavigationCompletedEventArgs>(this.WebView1_NavigationCompleted);
+            this.WebView1.NavigationStarting += new System.EventHandler<WebViewControlNavigationStartingEventArgs>(this.WebView1_NavigationStarting);
+            // 
             // frmBrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(604, 472);
+            this.ClientSize = new System.Drawing.Size(604, 708);
             this.Controls.Add(this.buttonQuickLogin);
             this.Controls.Add(this.labelQuickLoginInstructions);
             this.Controls.Add(this.labelWebBrowserAuth);
             this.Controls.Add(this.pictureBoxWebBrowserLock);
             this.Controls.Add(this.labelWebBrowser);
-            this.Controls.Add(this.webBrowserAuthentication);
-            this.Controls.Add(this.pictureBoxSpinningGif);
+            this.Controls.Add(this.WebView1);
             this.Controls.Add(this.labelSaving);
+            this.Controls.Add(this.pictureBoxSpinningGif);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
@@ -170,14 +168,13 @@ namespace IdleMasterExtended
             this.Load += new System.EventHandler(this.frmBrowser_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxSpinningGif)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWebBrowserLock)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.WebView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private WebBrowser webBrowserAuthentication;
         private Label labelSaving;
         private PictureBox pictureBoxSpinningGif;
         private Timer timerCheck;
@@ -186,5 +183,6 @@ namespace IdleMasterExtended
         private Label labelWebBrowserAuth;
         private Button buttonQuickLogin;
         private Label labelQuickLoginInstructions;
+        private Microsoft.Toolkit.Forms.UI.Controls.WebView WebView1;
     }
 }

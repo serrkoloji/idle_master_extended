@@ -4,26 +4,17 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using IdleMasterExtended.Properties;
+using Microsoft.Toolkit.Win32.UI.Controls.Interop.WinRT;
 
 namespace IdleMasterExtended
 {
     public partial class frmBrowser : Form
     {
-
-        public int SecondsWaiting = 300;
-
-        [DllImport("wininet.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool InternetSetOption(int hInternet, int dwOption, string lpBuffer, int dwBufferLength);
-
-        [DllImport("wininet.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool InternetSetCookie(string lpszUrlName, string lpszCookieName, string lpszCookieData);
+        private Uri currentUri;
 
         public frmBrowser()
         {
-            // This initializes the components on the form
             InitializeComponent();
-
-            // TODO: Move this somewhere else (changes the loading spinner depending on the theme)
             pictureBoxSpinningGif.Image = Settings.Default.customTheme ? Resources.imgSpinInv : Resources.imgSpin;
         }
 
@@ -33,77 +24,59 @@ namespace IdleMasterExtended
             browserBarVisibility(false);
 
             // Remove any existing session state data
-            InternetSetOption(0, 42, null, 0);
 
             // Localize form
             this.Text = localization.strings.please_login;
             labelSaving.Text = localization.strings.saving_info;
 
             // Delete Steam cookie data from the browser control
-            InternetSetCookie("https://steamcommunity.com", "sessionid", ";expires=Mon, 01 Jan 0001 00:00:00 GMT");
-            InternetSetCookie("https://steamcommunity.com", "steamLogin", ";expires=Mon, 01 Jan 0001 00:00:00 GMT");
-            InternetSetCookie("https://steamcommunity.com", "steamLoginSecure", ";expires=Mon, 01 Jan 0001 00:00:00 GMT");
-            InternetSetCookie("https://steamcommunity.com", "steamRememberLogin", ";expires=Mon, 01 Jan 0001 00:00:00 GMT");
+            //InternetSetCookie("https://steamcommunity.com", "sessionid", ";expires=Mon, 01 Jan 0001 00:00:00 GMT");
+            //InternetSetCookie("https://steamcommunity.com", "steamLogin", ";expires=Mon, 01 Jan 0001 00:00:00 GMT");
+            //InternetSetCookie("https://steamcommunity.com", "steamLoginSecure", ";expires=Mon, 01 Jan 0001 00:00:00 GMT");
+            //InternetSetCookie("https://steamcommunity.com", "steamRememberLogin", ";expires=Mon, 01 Jan 0001 00:00:00 GMT");
 
-            // When the form is loaded, navigate to the Steam login page using the web browser control
-            webBrowserAuthentication.Navigate("https://steamcommunity.com/login/home/?goto=my/profile", "_self", null, "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko");
+            WebView1.Navigate("https://steamcommunity.com/login/home/?goto=my/profile");
 
             this.BackColor = Settings.Default.customTheme ? Settings.Default.colorBgd : Settings.Default.colorBgdOriginal;
             this.ForeColor = Settings.Default.customTheme ? Settings.Default.colorTxt : Settings.Default.colorTxtOriginal;
         }
-
-        // This code block executes each time a new document is loaded into the web browser control
-        private void wbAuth_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+        private void WebView1_NavigationStarting(object sender, WebViewControlNavigationStartingEventArgs args)
         {
-            dynamic htmldoc = webBrowserAuthentication.Document.DomDocument;
+            currentUri = args.Uri;
+        }
 
-            // Get the URL of the page that just finished loading
-            var url = webBrowserAuthentication.Url.AbsoluteUri;
-
-            // If the page it just finished loading is the login page
-            if (url.StartsWith("https://steamcommunity.com/login/home/?goto=") ||
-                url == "https://store.steampowered.com/login/transfer" ||
-                url == "https://store.steampowered.com//login/transfer")
+        private void WebView1_NavigationCompleted(object sender, WebViewControlNavigationCompletedEventArgs args)
+        {
+            string url = "";
+            try { url = args.Uri.ToString(); }
+            finally
             {
-                // Get a list of cookies from the current page
-                CookieContainer container = GetUriCookieContainer(webBrowserAuthentication.Url);
-                var cookies = container.GetCookies(webBrowserAuthentication.Url);
-                foreach (Cookie cookie in cookies)
+                if (url.StartsWith("https://steamcommunity.com/login/home/?goto=") ||
+                    url == "https://store.steampowered.com/login/transfer" ||
+                    url == "https://store.steampowered.com//login/transfer")
                 {
-                    if (cookie.Name.StartsWith("steamMachineAuth"))
-                        Settings.Default.steamMachineAuth = cookie.Value;
+                    extractCookies(url);
+                    browserBarVisibility(true);
+                    quickLoginBarVisibility(true);
+                    setRememberMeCheckbox();
+                    removeUnneccessaryWebsiteElements();
                 }
-
-                browserBarVisibility(true);
-                quickLoginBarVisibility(true);
-                setRememberMeCheckbox();
-                removeUnneccessaryWebsiteElements();
+                else if (url.StartsWith("javascript:") == false && url.StartsWith("about:") == false)
+                {
+                    extractSteamCookies(new Uri(url));
+                    Close();
+                }
             }
-            // If the page it just finished loading isn't the login page
-            else if (url.StartsWith("javascript:") == false && url.StartsWith("about:") == false)
-            {
-                try
-                {
-                    dynamic parentalNotice = htmldoc.GetElementById("parental_notice");
-                    if (parentalNotice != null && !(parentalNotice is DBNull))
-                    {
-                        if (parentalNotice.OuterHtml != "")
-                        {
-                            // Steam family options enabled
-                            webBrowserAuthentication.Show();
-                            Width = 1000;
-                            Height = 350;
-                            return;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.Exception(ex, "parental_notice = " + htmldoc.GetElementById("parental_notice"));
-                }
+        }
 
-                extractSteamCookies();
-                Close();
+        private static void extractCookies(string url)
+        {
+            CookieContainer container = GetUriCookieContainer(new Uri(url));
+            var cookies = container.GetCookies(new Uri(url));
+            foreach (Cookie cookie in cookies)
+            {
+                if (cookie.Name.StartsWith("steamMachineAuth"))
+                    Settings.Default.steamMachineAuth = cookie.Value;
             }
         }
 
@@ -155,10 +128,10 @@ namespace IdleMasterExtended
             }
         }
 
-        private void extractSteamCookies()
+        private void extractSteamCookies(Uri uri)
         {
-            var container = GetUriCookieContainer(webBrowserAuthentication.Url);
-            var cookies = container.GetCookies(webBrowserAuthentication.Url);
+            var container = GetUriCookieContainer(uri);
+            var cookies = container.GetCookies(uri);
 
             foreach (Cookie cookie in cookies)
             {
@@ -308,15 +281,6 @@ namespace IdleMasterExtended
                     extractSteamCookies();
                     stopTimerAndCloseForm();
                 }
-            }
-
-            if (SecondsWaiting > 0 || webBrowserAuthentication.ReadyState.Equals(WebBrowserReadyState.Uninitialized))
-            {
-                SecondsWaiting -= 1;
-            }
-            else
-            {
-                stopTimerAndCloseForm();
             }
         }
 
