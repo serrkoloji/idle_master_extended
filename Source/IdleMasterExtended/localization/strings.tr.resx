@@ -349,4 +349,22 @@ aksi halde hırsızlar tarafından Steam hesabınıza giriş yapılma tehdidi ol
   <data name="whitelist" xml:space="preserve">
     <value>&amp;Beyaz Liste</value>
   </data>
+  <data name="Open SMB" xml:space="preserve">
+    <value>SMB dosyasını Aç</value>
+  </data>
+  <data name="clear_all" xml:space="preserve">
+    <value>Tümünü Sil</value>
+  </data>
+  <data name="open" xml:space="preserve">
+    <value>Aç</value>
+  </data>
+  <data name="msg_delete_all_head" xml:space="preserve">
+    <value>Uyarı!</value>
+  </data>
+  <data name="msg_delete_all_text" xml:space="preserve">
+    <value>Hepsini silmek istiyor musunuz?</value>
+  </data>
+  <data name="export_blacklist" xml:space="preserve">
+    <value>Dışa Aktar</value>
+  </data>
 </root>

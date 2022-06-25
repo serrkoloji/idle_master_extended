@@ -897,6 +897,9 @@ namespace IdleMasterExtended
                     case "Turkish":
                         language_string = "tr";
                         break;
+                    case "Kurdish":
+                        language_string = "ku";
+                        break;
                     case "Ukrainian":
                         language_string = "uk";
                         break;

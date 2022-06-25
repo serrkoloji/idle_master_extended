@@ -350,4 +350,19 @@ your Steam account.</value>
   <data name="whitelist" xml:space="preserve">
     <value>&amp;Whitelist</value>
   </data>
+  <data name="clear_all" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="open" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="msg_delete_all_head" xml:space="preserve">
+    <value>Warning!</value>
+  </data>
+  <data name="msg_delete_all_text" xml:space="preserve">
+    <value>Do you want to delete all?</value>
+  </data>
+  <data name="export_blacklist" xml:space="preserve">
+    <value>Export</value>
+  </data>
 </root>

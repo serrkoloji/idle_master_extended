@@ -42,7 +42,7 @@ namespace IdleMasterExtended
             // btnOK
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnOK.Location = new System.Drawing.Point(192, 129);
+            this.btnOK.Location = new System.Drawing.Point(204, 134);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 0;
@@ -66,9 +66,10 @@ namespace IdleMasterExtended
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 139);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(134, 13);
+            this.label2.Size = new System.Drawing.Size(187, 13);
             this.label2.TabIndex = 3;
-            this.label2.Text = "by jshackles + JonasNilson";
+            this.label2.Text = "by jshackles + JonasNilson + serrkoloji";
+            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // linkLabelVersion
             // 
@@ -86,7 +87,7 @@ namespace IdleMasterExtended
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(272, 159);
+            this.ClientSize = new System.Drawing.Size(284, 164);
             this.Controls.Add(this.linkLabelVersion);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pictureBox1);

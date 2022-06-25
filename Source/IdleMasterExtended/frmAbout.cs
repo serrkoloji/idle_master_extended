@@ -61,5 +61,10 @@ namespace IdleMasterExtended
         {
             System.Diagnostics.Process.Start("https://github.com/JonasNilson/idle_master_extended/releases");
         }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
