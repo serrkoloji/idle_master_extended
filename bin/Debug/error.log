@@ -1,0 +1,9 @@
+﻿25.06.2022 10:58:07   Badge -> LoadBadgesAsync, for profile = https://steamcommunity.com/profiles/76561199060102543
+System.Exception: Response is null or empty. Added (+1) to RetryCount
+   at IdleMasterExtended.frmMain.CheckIfResponseIsNullWithRetryCount(String response) in C:\Users\SEKO\Desktop\idle_master_extended-develop_2\idle_master_extended-develop\Source\IdleMasterExtended\frmMain.cs:line 170
+   at IdleMasterExtended.frmMain.<GetBadgePageAsync>d__25.MoveNext() in C:\Users\SEKO\Desktop\idle_master_extended-develop_2\idle_master_extended-develop\Source\IdleMasterExtended\frmMain.cs:line 122
+--- End of stack trace from previous location where exception was thrown ---
+   at System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   at System.Runtime.CompilerServices.TaskAwaiter`1.GetResult()
+   at IdleMasterExtended.frmMain.<LoadBadgesAsync>d__24.MoveNext() in C:\Users\SEKO\Desktop\idle_master_extended-develop_2\idle_master_extended-develop\Source\IdleMasterExtended\frmMain.cs:line 99
